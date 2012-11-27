@@ -245,7 +245,7 @@ class YoutubeIE(InfoExtractor):
 		request = urllib2.Request(self._LANG_URL)
 		try:
 			self.report_lang()
-			urllib2.urlopen(request).read()
+			compat_urlopen(request).read()
 		except (urllib2.URLError, httplib.HTTPException, socket.error):
 			_, err, _ = sys.exc_info()
 			self._downloader.to_stderr(u('WARNING: unable to set language: %s') % u(err))
@@ -266,7 +266,7 @@ class YoutubeIE(InfoExtractor):
 		request = urllib2.Request(self._LOGIN_URL, urllib.urlencode(login_form))
 		try:
 			self.report_login()
-			login_results = urllib2.urlopen(request).read()
+			login_results = compat_urlopen(request).read()
 			if re.search(r'(?i)<form[^>]* name="loginForm"', login_results) is not None:
 				self._downloader.to_stderr(u('WARNING: unable to log in: bad username or password'))
 				return
@@ -283,7 +283,7 @@ class YoutubeIE(InfoExtractor):
 		request = urllib2.Request(self._AGE_URL, urllib.urlencode(age_form))
 		try:
 			self.report_age_confirmation()
-			age_results = urllib2.urlopen(request).read()
+			age_results = compat_urlopen(request).read()
 		except (urllib2.URLError, httplib.HTTPException, socket.error):
 			_, err, _ = sys.exc_info()
 			self._downloader.trouble(u('ERROR: unable to confirm age: %s') % u(err))
@@ -306,7 +306,7 @@ class YoutubeIE(InfoExtractor):
 		self.report_video_webpage_download(video_id)
 		request = urllib2.Request('http://www.youtube.com/watch?v=%s&gl=US&hl=en&has_verified=1' % video_id)
 		try:
-			video_webpage = urllib2.urlopen(request).read()
+			video_webpage = compat_urlopen(request).read()
 		except (urllib2.URLError, httplib.HTTPException, socket.error):
 			_, err, _ = sys.exc_info()
 			self._downloader.trouble(u('ERROR: unable to download video webpage: %s') % u(err))
@@ -326,7 +326,7 @@ class YoutubeIE(InfoExtractor):
 					% (video_id, el_type))
 			request = urllib2.Request(video_info_url)
 			try:
-				video_info_webpage = urllib2.urlopen(request).read()
+				video_info_webpage = compat_urlopen(request).read()
 				video_info = parse_qs(video_info_webpage)
 				if 'token' in video_info:
 					break
@@ -393,7 +393,7 @@ class YoutubeIE(InfoExtractor):
 				self.report_video_subtitles_download(video_id)
 				request = urllib2.Request('http://video.google.com/timedtext?hl=en&type=list&v=%s' % video_id)
 				try:
-					srt_list = urllib2.urlopen(request).read()
+					srt_list = compat_urlopen(request).read()
 				except (urllib2.URLError, httplib.HTTPException, socket.error):
 					_, err, _ = sys.exc_info()
 					raise Trouble(u('WARNING: unable to download video subtitles: %s') % u(err))
@@ -411,7 +411,7 @@ class YoutubeIE(InfoExtractor):
 					raise Trouble(u('WARNING: no closed captions found in the specified language'))
 				request = urllib2.Request('http://www.youtube.com/api/timedtext?lang=%s&name=%s&v=%s' % (srt_lang, srt_lang_list[srt_lang], video_id))
 				try:
-					srt_xml = urllib2.urlopen(request).read()
+					srt_xml = compat_urlopen(request).read()
 				except (urllib2.URLError, httplib.HTTPException, socket.error):
 					_, err, _ = sys.exc_info()
 					raise Trouble(u('WARNING: unable to download video subtitles: %s') % u(err))
@@ -532,7 +532,7 @@ class MetacafeIE(InfoExtractor):
 		request = urllib2.Request(self._DISCLAIMER)
 		try:
 			self.report_disclaimer()
-			disclaimer = urllib2.urlopen(request).read()
+			disclaimer = compat_urlopen(request).read()
 		except (urllib2.URLError, httplib.HTTPException, socket.error):
 			_, err, _ = sys.exc_info()
 			self._downloader.trouble(u('ERROR: unable to retrieve disclaimer: %s') % u(err))
@@ -546,7 +546,7 @@ class MetacafeIE(InfoExtractor):
 		request = urllib2.Request(self._FILTER_POST, urllib.urlencode(disclaimer_form))
 		try:
 			self.report_age_confirmation()
-			disclaimer = urllib2.urlopen(request).read()
+			disclaimer = compat_urlopen(request).read()
 		except (urllib2.URLError, httplib.HTTPException, socket.error):
 			_, err, _ = sys.exc_info()
 			self._downloader.trouble(u('ERROR: unable to confirm age: %s') % u(err))
@@ -571,7 +571,7 @@ class MetacafeIE(InfoExtractor):
 		request = urllib2.Request('http://www.metacafe.com/watch/%s/' % video_id)
 		try:
 			self.report_download_webpage(video_id)
-			webpage = urllib2.urlopen(request).read()
+			webpage = compat_urlopen(request).read()
 		except (urllib2.URLError, httplib.HTTPException, socket.error):
 			_, err, _ = sys.exc_info()
 			self._downloader.trouble(u('ERROR: unable retrieve video webpage: %s') % u(err))
@@ -665,7 +665,7 @@ class DailymotionIE(InfoExtractor):
 		request.add_header('Cookie', 'family_filter=off')
 		try:
 			self.report_download_webpage(video_id)
-			webpage = urllib2.urlopen(request).read()
+			webpage = compat_urlopen(request).read()
 		except (urllib2.URLError, httplib.HTTPException, socket.error):
 			_, err, _ = sys.exc_info()
 			self._downloader.trouble(u('ERROR: unable retrieve video webpage: %s') % u(err))
@@ -764,7 +764,7 @@ class GoogleIE(InfoExtractor):
 		request = urllib2.Request('http://video.google.com/videoplay?docid=%s&hl=en&oe=utf-8' % video_id)
 		try:
 			self.report_download_webpage(video_id)
-			webpage = urllib2.urlopen(request).read()
+			webpage = compat_urlopen(request).read()
 		except (urllib2.URLError, httplib.HTTPException, socket.error):
 			_, err, _ = sys.exc_info()
 			self._downloader.trouble(u('ERROR: Unable to retrieve video webpage: %s') % u(err))
@@ -804,7 +804,7 @@ class GoogleIE(InfoExtractor):
 		if self._downloader.params.get('forcethumbnail', False):
 			request = urllib2.Request('http://video.google.com/videosearch?q=%s+site:video.google.com&hl=en' % abs(int(video_id)))
 			try:
-				webpage = urllib2.urlopen(request).read()
+				webpage = compat_urlopen(request).read()
 			except (urllib2.URLError, httplib.HTTPException, socket.error):
 				_, err, _ = sys.exc_info()
 				self._downloader.trouble(u('ERROR: Unable to retrieve video webpage: %s') % u(err))
@@ -861,7 +861,7 @@ class PhotobucketIE(InfoExtractor):
 		request = urllib2.Request(url)
 		try:
 			self.report_download_webpage(video_id)
-			webpage = urllib2.urlopen(request).read()
+			webpage = compat_urlopen(request).read()
 		except (urllib2.URLError, httplib.HTTPException, socket.error):
 			_, err, _ = sys.exc_info()
 			self._downloader.trouble(u('ERROR: Unable to retrieve video webpage: %s') % u(err))
@@ -932,7 +932,7 @@ class YahooIE(InfoExtractor):
 		if re.match(self._VPAGE_URL, url) is None:
 			request = urllib2.Request(url)
 			try:
-				webpage = urllib2.urlopen(request).read()
+				webpage = compat_urlopen(request).read()
 			except (urllib2.URLError, httplib.HTTPException, socket.error):
 				_, err, _ = sys.exc_info()
 				self._downloader.trouble(u('ERROR: Unable to retrieve video webpage: %s') % u(err))
@@ -957,7 +957,7 @@ class YahooIE(InfoExtractor):
 		request = urllib2.Request(url)
 		try:
 			self.report_download_webpage(video_id)
-			webpage = urllib2.urlopen(request).read()
+			webpage = compat_urlopen(request).read()
 		except (urllib2.URLError, httplib.HTTPException, socket.error):
 			_, err, _ = sys.exc_info()
 			self._downloader.trouble(u('ERROR: Unable to retrieve video webpage: %s') % u(err))
@@ -1016,7 +1016,7 @@ class YahooIE(InfoExtractor):
 				'&vidW=' + yv_video_width + '&swf=as3&rd=video.yahoo.com&tk=null&adsupported=v1,v2,&eventid=1301797')
 		try:
 			self.report_download_webpage(video_id)
-			webpage = urllib2.urlopen(request).read()
+			webpage = compat_urlopen(request).read()
 		except (urllib2.URLError, httplib.HTTPException, socket.error):
 			_, err, _ = sys.exc_info()
 			self._downloader.trouble(u('ERROR: Unable to retrieve video webpage: %s') % u(err))
@@ -1075,7 +1075,7 @@ class VimeoIE(InfoExtractor):
 		request = urllib2.Request(url, None, std_headers)
 		try:
 			self.report_download_webpage(video_id)
-			webpage = urllib2.urlopen(request).read()
+			webpage = compat_urlopen(request).read()
 		except (urllib2.URLError, httplib.HTTPException, socket.error):
 			_, err, _ = sys.exc_info()
 			self._downloader.trouble(u('ERROR: Unable to retrieve video webpage: %s') % u(err))
@@ -1183,7 +1183,7 @@ class ArteTvIE(InfoExtractor):
 		request = urllib2.Request(url)
 		try:
 			self.report_download_webpage(url)
-			webpage = urllib2.urlopen(request).read()
+			webpage = compat_urlopen(request).read()
 		except (urllib2.URLError, httplib.HTTPException, socket.error):
 			_, err, _ = sys.exc_info()
 			self._downloader.trouble(u('ERROR: Unable to retrieve video webpage: %s') % str(err))
@@ -1381,7 +1381,7 @@ class GenericIE(InfoExtractor):
 		request = urllib2.Request(url)
 		try:
 			self.report_download_webpage(video_id)
-			webpage = urllib2.urlopen(request).read()
+			webpage = compat_urlopen(request).read()
 		except (urllib2.URLError, httplib.HTTPException, socket.error):
 			_, err, _ = sys.exc_info()
 			self._downloader.trouble(u('ERROR: Unable to retrieve video webpage: %s') % u(err))
@@ -1504,7 +1504,7 @@ class YoutubeSearchIE(InfoExtractor):
 			result_url = self._API_URL % (urllib.quote_plus(query), (50*pagenum)+1)
 			request = urllib2.Request(result_url)
 			try:
-				data = urllib2.urlopen(request).read()
+				data = compat_urlopen(request).read()
 			except (urllib2.URLError, httplib.HTTPException, socket.error):
 				_, err, _ = sys.exc_info()
 				self._downloader.trouble(u('ERROR: unable to download API page: %s') % u(err))
@@ -1582,7 +1582,7 @@ class GoogleSearchIE(InfoExtractor):
 			result_url = self._TEMPLATE_URL % (urllib.quote_plus(query), pagenum*10)
 			request = urllib2.Request(result_url)
 			try:
-				page = urllib2.urlopen(request).read()
+				page = compat_urlopen(request).read()
 			except (urllib2.URLError, httplib.HTTPException, socket.error):
 				_, err, _ = sys.exc_info()
 				self._downloader.trouble(u('ERROR: unable to download webpage: %s') % u(err))
@@ -1666,7 +1666,7 @@ class YahooSearchIE(InfoExtractor):
 			result_url = self._TEMPLATE_URL % (urllib.quote_plus(query), pagenum)
 			request = urllib2.Request(result_url)
 			try:
-				page = urllib2.urlopen(request).read()
+				page = compat_urlopen(request).read()
 			except (urllib2.URLError, httplib.HTTPException, socket.error):
 				_, err, _ = sys.exc_info()
 				self._downloader.trouble(u('ERROR: unable to download webpage: %s') % u(err))
@@ -1737,7 +1737,7 @@ class YoutubePlaylistIE(InfoExtractor):
 			url = self._TEMPLATE_URL % (playlist_access, playlist_prefix, playlist_id, pagenum)
 			request = urllib2.Request(url)
 			try:
-				page = urllib2.urlopen(request).read()
+				page = compat_urlopen(request).read()
 			except (urllib2.URLError, httplib.HTTPException, socket.error):
 				_, err, _ = sys.exc_info()
 				self._downloader.trouble(u('ERROR: unable to download webpage: %s') % u(err))
@@ -1795,7 +1795,7 @@ class YoutubeChannelIE(InfoExtractor):
 			url = self._TEMPLATE_URL % (channel_id, pagenum)
 			request = urllib2.Request(url)
 			try:
-				page = urllib2.urlopen(request).read()
+				page = compat_urlopen(request).read()
 			except (urllib2.URLError, httplib.HTTPException, socket.error):
 				_, err, _ = sys.exc_info()
 				self._downloader.trouble(u('ERROR: unable to download webpage: %s') % u(err))
@@ -1859,7 +1859,7 @@ class YoutubeUserIE(InfoExtractor):
 			request = urllib2.Request(self._GDATA_URL % (username, self._GDATA_PAGE_SIZE, start_index))
 
 			try:
-				page = urllib2.urlopen(request).read()
+				page = compat_urlopen(request).read()
 			except (urllib2.URLError, httplib.HTTPException, socket.error):
 				_, err, _ = sys.exc_info()
 				self._downloader.trouble(u('ERROR: unable to download webpage: %s') % u(err))
@@ -1930,7 +1930,7 @@ class BlipTVUserIE(InfoExtractor):
 		request = urllib2.Request(url)
 
 		try:
-			page = urllib2.urlopen(request).read().decode('utf-8')
+			page = compat_urlopen(request).read().decode('utf-8')
 			mobj = re.search(r'data-users-id="([^"]+)"', page)
 			page_base = page_base % mobj.group(1)
 		except (urllib2.URLError, httplib.HTTPException, socket.error):
@@ -1953,7 +1953,7 @@ class BlipTVUserIE(InfoExtractor):
 			request = urllib2.Request( page_base + "&page=" + str(pagenum) )
 
 			try:
-				page = urllib2.urlopen(request).read().decode('utf-8')
+				page = compat_urlopen(request).read().decode('utf-8')
 			except (urllib2.URLError, httplib.HTTPException, socket.error):
 				_, err, _ = sys.exc_info()
 				self._downloader.trouble(u('ERROR: unable to download webpage: %s') % str(err))
@@ -2022,7 +2022,7 @@ class DepositFilesIE(InfoExtractor):
 		request = urllib2.Request(url, urllib.urlencode(free_download_indication))
 		try:
 			self.report_download_webpage(file_id)
-			webpage = urllib2.urlopen(request).read()
+			webpage = compat_urlopen(request).read()
 		except (urllib2.URLError, httplib.HTTPException, socket.error):
 			_, err, _ = sys.exc_info()
 			self._downloader.trouble(u('ERROR: Unable to retrieve file webpage: %s') % u(err))
@@ -2158,7 +2158,7 @@ class FacebookIE(InfoExtractor):
 		request = urllib2.Request(self._LOGIN_URL, urllib.urlencode(login_form))
 		try:
 			self.report_login()
-			login_results = urllib2.urlopen(request).read()
+			login_results = compat_urlopen(request).read()
 			if re.search(r'<form(.*)name="login"(.*)</form>', login_results) is not None:
 				self._downloader.to_stderr(u('WARNING: unable to log in: bad username/password, or exceded login rate limit (~3/min). Check credentials or wait.'))
 				return
@@ -2178,7 +2178,7 @@ class FacebookIE(InfoExtractor):
 		self.report_video_webpage_download(video_id)
 		request = urllib2.Request('https://www.facebook.com/video/video.php?v=%s' % video_id)
 		try:
-			page = urllib2.urlopen(request)
+			page = compat_urlopen(request)
 			video_webpage = page.read()
 		except (urllib2.URLError, httplib.HTTPException, socket.error):
 			_, err, _ = sys.exc_info()
@@ -2301,7 +2301,7 @@ class BlipTVIE(InfoExtractor):
 		self.report_extraction(mobj.group(1))
 		info = None
 		try:
-			urlh = urllib2.urlopen(request)
+			urlh = compat_urlopen(request)
 			if urlh.headers.get('Content-Type', '').startswith('video/'): # Direct download
 				basename = url.split('/')[-1]
 				title,ext = os.path.splitext(basename)
@@ -2391,7 +2391,7 @@ class MyVideoIE(InfoExtractor):
 		request = urllib2.Request('http://www.myvideo.de/watch/%s' % video_id)
 		try:
 			self.report_download_webpage(video_id)
-			webpage = urllib2.urlopen(request).read()
+			webpage = compat_urlopen(request).read()
 		except (urllib2.URLError, httplib.HTTPException, socket.error):
 			_, err, _ = sys.exc_info()
 			self._downloader.trouble(u('ERROR: Unable to retrieve video webpage: %s') % u(err))
@@ -2490,7 +2490,7 @@ class ComedyCentralIE(InfoExtractor):
 		req = urllib2.Request(url)
 		self.report_extraction(epTitle)
 		try:
-			htmlHandle = urllib2.urlopen(req)
+			htmlHandle = compat_urlopen(req)
 			html = htmlHandle.read()
 		except (urllib2.URLError, httplib.HTTPException, socket.error):
 			_, err, _ = sys.exc_info()
@@ -2524,7 +2524,7 @@ class ComedyCentralIE(InfoExtractor):
 		playerUrl_raw = mMovieParams[0][0]
 		self.report_player_url(epTitle)
 		try:
-			urlHandle = urllib2.urlopen(playerUrl_raw)
+			urlHandle = compat_urlopen(playerUrl_raw)
 			playerUrl = urlHandle.geturl()
 		except (urllib2.URLError, httplib.HTTPException, socket.error):
 			_, err, _ = sys.exc_info()
@@ -2535,7 +2535,7 @@ class ComedyCentralIE(InfoExtractor):
 		indexUrl = 'http://shadow.comedycentral.com/feeds/video_player/mrss/?' + urllib.urlencode({'uri': uri})
 		self.report_index_download(epTitle)
 		try:
-			indexXml = urllib2.urlopen(indexUrl).read()
+			indexXml = compat_urlopen(indexUrl).read()
 		except (urllib2.URLError, httplib.HTTPException, socket.error):
 			_, err, _ = sys.exc_info()
 			self._downloader.trouble(u('ERROR: unable to download episode index: ') + u(err))
@@ -2557,7 +2557,7 @@ class ComedyCentralIE(InfoExtractor):
 			configReq = urllib2.Request(configUrl)
 			self.report_config_download(epTitle)
 			try:
-				configXml = urllib2.urlopen(configReq).read()
+				configXml = compat_urlopen(configReq).read()
 			except (urllib2.URLError, httplib.HTTPException, socket.error):
 				_, err, _ = sys.exc_info()
 				self._downloader.trouble(u('ERROR: unable to download webpage: %s') % u(err))
@@ -2638,7 +2638,7 @@ class EscapistIE(InfoExtractor):
 
 		self.report_extraction(showName)
 		try:
-			webPage = urllib2.urlopen(url)
+			webPage = compat_urlopen(url)
 			webPageBytes = webPage.read()
 			m = re.match(r'text/html; charset="?([^"]+)"?', webPage.headers['Content-Type'])
 			webPage = webPageBytes.decode(m.group(1) if m else 'utf-8')
@@ -2658,7 +2658,7 @@ class EscapistIE(InfoExtractor):
 
 		self.report_config_download(showName)
 		try:
-			configJSON = urllib2.urlopen(configUrl).read()
+			configJSON = compat_urlopen(configUrl).read()
 		except (urllib2.URLError, httplib.HTTPException, socket.error):
 			_, err, _ = sys.exc_info()
 			self._downloader.trouble(u('ERROR: unable to download configuration: ') + u(err))
@@ -2717,7 +2717,7 @@ class CollegeHumorIE(InfoExtractor):
 		self.report_webpage(video_id)
 		request = urllib2.Request(url)
 		try:
-			webpage = urllib2.urlopen(request).read()
+			webpage = compat_urlopen(request).read()
 		except (urllib2.URLError, httplib.HTTPException, socket.error):
 			_, err, _ = sys.exc_info()
 			self._downloader.trouble(u('ERROR: unable to download video webpage: %s') % u(err))
@@ -2737,7 +2737,7 @@ class CollegeHumorIE(InfoExtractor):
 		self.report_extraction(video_id)
 		xmlUrl = 'http://www.collegehumor.com/moogaloop/video:' + internal_video_id
 		try:
-			metaXml = urllib2.urlopen(xmlUrl).read()
+			metaXml = compat_urlopen(xmlUrl).read()
 		except (urllib2.URLError, httplib.HTTPException, socket.error):
 			_, err, _ = sys.exc_info()
 			self._downloader.trouble(u('ERROR: unable to download video info XML: %s') % u(err))
@@ -2784,7 +2784,7 @@ class XVideosIE(InfoExtractor):
 
 		request = urllib2.Request(r'http://www.xvideos.com/video' + video_id)
 		try:
-			webpage = urllib2.urlopen(request).read()
+			webpage = compat_urlopen(request).read()
 		except (urllib2.URLError, httplib.HTTPException, socket.error):
 			_, err, _ = sys.exc_info()
 			self._downloader.trouble(u('ERROR: unable to download video webpage: %s') % u(err))
@@ -2871,7 +2871,7 @@ class SoundcloudIE(InfoExtractor):
 
 		request = urllib2.Request('http://soundcloud.com/%s/%s' % (uploader, slug_title))
 		try:
-			webpage = urllib2.urlopen(request).read()
+			webpage = compat_urlopen(request).read()
 		except (urllib2.URLError, httplib.HTTPException, socket.error):
 			_, err, _ = sys.exc_info()
 			self._downloader.trouble(u('ERROR: unable to download video webpage: %s') % u(err))
@@ -2951,7 +2951,7 @@ class InfoQIE(InfoExtractor):
 
 		request = urllib2.Request(url)
 		try:
-			webpage = urllib2.urlopen(request).read()
+			webpage = compat_urlopen(request).read()
 		except (urllib2.URLError, httplib.HTTPException, socket.error):
 			_, err, _ = sys.exc_info()
 			self._downloader.trouble(u('ERROR: unable to download video webpage: %s') % u(err))
@@ -3032,7 +3032,7 @@ class MixcloudIE(InfoExtractor):
 		"""Returns 1st active url from list"""
 		for url in url_list:
 			try:
-				urllib2.urlopen(url)
+				compat_urlopen(url)
 				return url
 			except (urllib2.URLError, httplib.HTTPException, socket.error):
 				_, err, _ = sys.exc_info()
@@ -3067,7 +3067,7 @@ class MixcloudIE(InfoExtractor):
 		request = urllib2.Request(file_url)
 		try:
 			self.report_download_json(file_url)
-			jsonData = urllib2.urlopen(request).read()
+			jsonData = compat_urlopen(request).read()
 		except (urllib2.URLError, httplib.HTTPException, socket.error):
 			_, err, _ = sys.exc_info()
 			self._downloader.trouble(u('ERROR: Unable to retrieve file: %s') % u(err))
@@ -3145,7 +3145,7 @@ class StanfordOpenClassroomIE(InfoExtractor):
 			baseUrl = 'http://openclassroom.stanford.edu/MainFolder/courses/' + course + '/videos/'
 			xmlUrl = baseUrl + video + '.xml'
 			try:
-				metaXml = urllib2.urlopen(xmlUrl).read()
+				metaXml = compat_urlopen(xmlUrl).read()
 			except (urllib2.URLError, httplib.HTTPException, socket.error):
 				_, err, _ = sys.exc_info()
 				self._downloader.trouble(u('ERROR: unable to download video info XML: %s') % u(err))
@@ -3169,7 +3169,7 @@ class StanfordOpenClassroomIE(InfoExtractor):
 
 			self.report_download_webpage(info['id'])
 			try:
-				coursepage = urllib2.urlopen(url).read()
+				coursepage = compat_urlopen(url).read()
 			except (urllib2.URLError, httplib.HTTPException, socket.error):
 				_, err, _ = sys.exc_info()
 				self._downloader.trouble(u('ERROR: unable to download course info page: ') + u(err))
@@ -3207,7 +3207,7 @@ class StanfordOpenClassroomIE(InfoExtractor):
 			self.report_download_webpage(info['id'])
 			rootURL = 'http://openclassroom.stanford.edu/MainFolder/HomePage.php'
 			try:
-				rootpage = urllib2.urlopen(rootURL).read()
+				rootpage = compat_urlopen(rootURL).read()
 			except (urllib2.URLError, httplib.HTTPException, socket.error):
 				_, err, _ = sys.exc_info()
 				self._downloader.trouble(u('ERROR: unable to download course info page: ') + u(err))
@@ -3255,7 +3255,7 @@ class MTVIE(InfoExtractor):
 
 		request = urllib2.Request(url)
 		try:
-			webpage = urllib2.urlopen(request).read()
+			webpage = compat_urlopen(request).read()
 		except (urllib2.URLError, httplib.HTTPException, socket.error):
 			_, err, _ = sys.exc_info()
 			self._downloader.trouble(u('ERROR: unable to download video webpage: %s') % u(err))
@@ -3289,7 +3289,7 @@ class MTVIE(InfoExtractor):
 		self.report_extraction(video_id)
 		request = urllib2.Request(videogen_url)
 		try:
-			metadataXml = urllib2.urlopen(request).read()
+			metadataXml = compat_urlopen(request).read()
 		except (urllib2.URLError, httplib.HTTPException, socket.error):
 			_, err, _ = sys.exc_info()
 			self._downloader.trouble(u('ERROR: unable to download video metadata: %s') % u(err))
@@ -3377,7 +3377,7 @@ class YoukuIE(InfoExtractor):
 		request = urllib2.Request(info_url, None, std_headers)
 		try:
 			self.report_download_webpage(video_id)
-			jsondata = urllib2.urlopen(request).read()
+			jsondata = compat_urlopen(request).read()
 		except (urllib2.URLError, httplib.HTTPException, socket.error):
 			_, err, _ = sys.exc_info()
 			self._downloader.trouble(u('ERROR: Unable to retrieve video webpage: %s') % u(err))
@@ -3472,7 +3472,7 @@ class XNXXIE(InfoExtractor):
 
 		# Get webpage content
 		try:
-			webpage = urllib2.urlopen(url).read()
+			webpage = compat_urlopen(url).read()
 		except (urllib2.URLError, httplib.HTTPException, socket.error):
 			_, err, _ = sys.exc_info()
 			self._downloader.trouble(u('ERROR: unable to download video webpage: %s') % err)
@@ -3555,7 +3555,7 @@ class GooglePlusIE(InfoExtractor):
 		self.report_extract_entry(post_url)
 		request = urllib2.Request(post_url)
 		try:
-			webpage = urllib2.urlopen(request).read()
+			webpage = compat_urlopen(request).read()
 		except (urllib2.URLError, httplib.HTTPException, socket.error):
 			_, err, _ = sys.exc_info()
 			self._downloader.trouble(u('ERROR: Unable to retrieve entry webpage: %s') % u(err))
@@ -3598,7 +3598,7 @@ class GooglePlusIE(InfoExtractor):
 		video_page = mobj.group(1)
 		request = urllib2.Request(video_page)
 		try:
-			webpage = urllib2.urlopen(request).read()
+			webpage = compat_urlopen(request).read()
 		except (urllib2.URLError, httplib.HTTPException, socket.error):
 			_, err, _ = sys.exc_info()
 			self._downloader.trouble(u('ERROR: Unable to retrieve video webpage: %s') % u(err))

@@ -606,7 +606,7 @@ class FileDownloader(object):
 			try:
 				if count == 0 and 'urlhandle' in info_dict:
 					data = info_dict['urlhandle']
-				data = urllib2.urlopen(request)
+				data = compat_urlopen(request)
 				break
 			except (urllib2.HTTPError, ):
 				_, err, _ = sys.exc_info()
@@ -617,7 +617,7 @@ class FileDownloader(object):
 					# Unable to resume (requested range not satisfiable)
 					try:
 						# Open the connection again without the range header
-						data = urllib2.urlopen(basic_request)
+						data = compat_urlopen(basic_request)
 						content_length = data.info()['Content-Length']
 					except (urllib2.HTTPError, ):
 						_, err, _ = sys.exc_info()

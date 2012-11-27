@@ -28,8 +28,6 @@ UPDATE_URL = 'https://raw.github.com/rg3/youtube-dl/master/youtube-dl'
 UPDATE_URL_VERSION = 'https://raw.github.com/rg3/youtube-dl/master/LATEST_VERSION'
 UPDATE_URL_EXE = 'https://raw.github.com/rg3/youtube-dl/master/youtube-dl.exe'
 
-
-import cookielib
 import getpass
 import optparse
 import os
@@ -38,7 +36,6 @@ import shlex
 import socket
 import subprocess
 import sys
-import urllib2
 import warnings
 
 from utils import *
@@ -55,7 +52,7 @@ def updateSelf(downloader, filename):
 
 	downloader.to_screen(u('Updating to latest version...'))
 
-	urlv = urllib2.urlopen(UPDATE_URL_VERSION)
+	urlv = compat_urlopen(UPDATE_URL_VERSION)
 	newversion = urlv.read().strip()
 	if newversion == __version__:
 		downloader.to_screen(u('youtube-dl is up-to-date (') + __version__ + ')')
@@ -69,7 +66,7 @@ def updateSelf(downloader, filename):
 			sys.exit('ERROR: no write permissions on %s' % directory)
 
 		try:
-			urlh = urllib2.urlopen(UPDATE_URL_EXE)
+			urlh = compat_urlopen(UPDATE_URL_EXE)
 			newcontent = urlh.read()
 			urlh.close()
 			with open(exe + '.new', 'wb') as outf:
@@ -96,7 +93,7 @@ del "%s"
 
 	else:
 		try:
-			urlh = urllib2.urlopen(UPDATE_URL)
+			urlh = compat_urlopen(UPDATE_URL)
 			newcontent = urlh.read()
 			urlh.close()
 		except (IOError, OSError):
@@ -384,10 +381,10 @@ def _real_main():
 
 	# Open appropriate CookieJar
 	if opts.cookiefile is None:
-		jar = cookielib.CookieJar()
+		jar = compat_cookiejar.CookieJar()
 	else:
 		try:
-			jar = cookielib.MozillaCookieJar(opts.cookiefile)
+			jar = compat_cookiejar.MozillaCookieJar(opts.cookiefile)
 			if os.path.isfile(opts.cookiefile) and os.access(opts.cookiefile, os.R_OK):
 				jar.load()
 		except (IOError, OSError):

@@ -30,6 +30,17 @@ try:
 except NameError:
 	u = str
 
+try:
+	import cookielib as compat_cookiejar
+except ImportError: # Python 3
+	import http.cookiejar as compat_cookiejar
+try:
+	import urllib2
+	compat_urlopen = urllib2.urlopen
+except ImportError: # Python 3
+	import urllib.request
+	compat_urlopen = urllib.request.urlopen
+
 def preferredencoding():
 	"""Get preferred encoding.
 
