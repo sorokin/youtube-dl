@@ -40,7 +40,7 @@ class DownloadTest(unittest.TestCase):
 		with open(DownloadTest.PARAMETERS_FILE) as f:
 			fd = FileDownloader(json.load(f))
 		fd.add_info_extractor(YoutubeIE())
-		fd.download([DownloadTest.YOUTUBE_URL])
+		fd.download_single(DownloadTest.YOUTUBE_URL)
 		self.assertTrue(os.path.exists(DownloadTest.YOUTUBE_FILE))
 		self.assertEqual(os.path.getsize(DownloadTest.YOUTUBE_FILE), DownloadTest.YOUTUBE_SIZE)
 
@@ -48,7 +48,7 @@ class DownloadTest(unittest.TestCase):
 		with open(DownloadTest.PARAMETERS_FILE) as f:
 			fd = FileDownloader(json.load(f))
 		fd.add_info_extractor(DailymotionIE())
-		fd.download([DownloadTest.DAILYMOTION_URL])
+		fd.download_single(DownloadTest.DAILYMOTION_URL)
 		self.assertTrue(os.path.exists(DownloadTest.DAILYMOTION_FILE))
 		md5_down_file = md5_for_file(DownloadTest.DAILYMOTION_FILE)
 		self.assertEqual(md5_down_file, DownloadTest.DAILYMOTION_MD5)
@@ -59,7 +59,7 @@ class DownloadTest(unittest.TestCase):
 			fd = FileDownloader(json.load(f))
 		fd.add_info_extractor(MetacafeIE())
 		fd.add_info_extractor(YoutubeIE())
-		fd.download([DownloadTest.METACAFE_URL])
+		fd.download_single(DownloadTest.METACAFE_URL)
 		self.assertTrue(os.path.exists(DownloadTest.METACAFE_FILE))
 		self.assertEqual(os.path.getsize(DownloadTest.METACAFE_FILE), DownloadTest.METACAFE_SIZE)
 
@@ -67,7 +67,7 @@ class DownloadTest(unittest.TestCase):
 		with open(DownloadTest.PARAMETERS_FILE) as f:
 			fd = FileDownloader(json.load(f))
 		fd.add_info_extractor(BlipTVIE())
-		fd.download([DownloadTest.BLIP_URL])
+		fd.download_single(DownloadTest.BLIP_URL)
 		self.assertTrue(os.path.exists(DownloadTest.BLIP_FILE))
 		md5_down_file = md5_for_file(DownloadTest.BLIP_FILE)
 		self.assertEqual(md5_down_file, DownloadTest.BLIP_MD5)

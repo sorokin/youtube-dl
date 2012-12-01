@@ -554,7 +554,7 @@ class MetacafeIE(InfoExtractor):
 		# Check if video comes from YouTube
 		mobj2 = re.match(r'^yt-(.*)$', video_id)
 		if mobj2 is not None:
-			self._downloader.download(['http://www.youtube.com/watch?v=%s' % mobj2.group(1)])
+			self._downloader.download_single('http://www.youtube.com/watch?v=%s' % mobj2.group(1))
 			return
 
 		# Retrieve video webpage to extract further information
@@ -1213,7 +1213,7 @@ class GenericIE(InfoExtractor):
 		if url == new_url: return False
 		
 		self.report_following_redirect(new_url)
-		self._downloader.download([new_url])
+		self._downloader.download_single(new_url)
 		return True
 
 	def _real_extract(self, url):
@@ -1359,7 +1359,7 @@ class YoutubeSearchIE(InfoExtractor):
 		if len(video_ids) > n:
 			video_ids = video_ids[:n]
 		for id in video_ids:
-			self._downloader.download(['http://www.youtube.com/watch?v=%s' % id])
+			self._downloader.download_single('http://www.youtube.com/watch?v=%s' % id)
 		return
 
 
@@ -1434,12 +1434,12 @@ class GoogleSearchIE(InfoExtractor):
 					if len(video_ids) == n:
 						# Specified n videos reached
 						for id in video_ids:
-							self._downloader.download(['http://video.google.com/videoplay?docid=%s' % id])
+							self._downloader.download_single('http://video.google.com/videoplay?docid=%s' % id)
 						return
 
 			if re.search(self._MORE_PAGES_INDICATOR, page) is None:
 				for id in video_ids:
-					self._downloader.download(['http://video.google.com/videoplay?docid=%s' % id])
+					self._downloader.download_single('http://video.google.com/videoplay?docid=%s' % id)
 				return
 
 			pagenum = pagenum + 1
@@ -1518,12 +1518,12 @@ class YahooSearchIE(InfoExtractor):
 					if len(video_ids) == n:
 						# Specified n videos reached
 						for id in video_ids:
-							self._downloader.download(['http://video.yahoo.com/watch/%s' % id])
+							self._downloader.download_single('http://video.yahoo.com/watch/%s' % id)
 						return
 
 			if re.search(self._MORE_PAGES_INDICATOR, page) is None:
 				for id in video_ids:
-					self._downloader.download(['http://video.yahoo.com/watch/%s' % id])
+					self._downloader.download_single('http://video.yahoo.com/watch/%s' % id)
 				return
 
 			pagenum = pagenum + 1
@@ -1554,7 +1554,7 @@ class YoutubePlaylistIE(InfoExtractor):
 
 		# Single video case
 		if mobj.group(3) is not None:
-			self._downloader.download([mobj.group(3)])
+			self._downloader.download_single(mobj.group(3))
 			return
 
 		# Download playlist pages
@@ -1597,8 +1597,8 @@ class YoutubePlaylistIE(InfoExtractor):
 		else:
 			video_ids = video_ids[playliststart:playlistend]
 
-		for id in video_ids:
-			self._downloader.download(['http://www.youtube.com/watch?v=%s' % id])
+		for (n, id) in enumerate(video_ids, playliststart + 1):
+			self._downloader.download_single('http://www.youtube.com/watch?v=%s' % id, n)
 		return
 
 
@@ -1648,7 +1648,7 @@ class YoutubeChannelIE(InfoExtractor):
 			pagenum = pagenum + 1
 
 		for id in video_ids:
-			self._downloader.download(['http://www.youtube.com/watch?v=%s' % id])
+			self._downloader.download_single('http://www.youtube.com/watch?v=%s' % id)
 		return
 
 
@@ -1732,7 +1732,7 @@ class YoutubeUserIE(InfoExtractor):
 				(username, all_ids_count, len(video_ids)))
 
 		for video_id in video_ids:
-			self._downloader.download(['http://www.youtube.com/watch?v=%s' % video_id])
+			self._downloader.download_single('http://www.youtube.com/watch?v=%s' % video_id)
 
 
 class BlipTVUserIE(InfoExtractor):
@@ -1824,7 +1824,7 @@ class BlipTVUserIE(InfoExtractor):
 				(self.IE_NAME, username, all_ids_count, len(video_ids)))
 
 		for video_id in video_ids:
-			self._downloader.download([u'http://blip.tv/'+video_id])
+			self._downloader.download_single(u'http://blip.tv/'+video_id)
 
 
 class DepositFilesIE(InfoExtractor):

@@ -465,32 +465,37 @@ class FileDownloader(object):
 			raise SameFileError(self.params['outtmpl'])
 
 		for url in url_list:
-			suitable_found = False
-			for ie in self._ies:
-				# Go to next InfoExtractor if not suitable
-				if not ie.suitable(url):
-					continue
-
-				# Suitable InfoExtractor found
-				suitable_found = True
-
-				# Extract information from URL and process it
-				videos = ie.extract(url)
-				for video in videos or []:
-					video['extractor'] = ie.IE_NAME
-					try:
-						self.increment_downloads()
-						self.process_info(video)
-					except UnavailableVideoError:
-						self.trouble(u'\nERROR: unable to download video')
-
-				# Suitable InfoExtractor had been found; go to next URL
-				break
-
-			if not suitable_found:
-				self.trouble(u'ERROR: no suitable InfoExtractor: %s' % url)
+			self.download_single(url)
 
 		return self._download_retcode
+
+	def download_single(self, url, playlist_number = None):
+		suitable_found = False
+		for ie in self._ies:
+			# Go to next InfoExtractor if not suitable
+			if not ie.suitable(url):
+				continue
+
+			# Suitable InfoExtractor found
+			suitable_found = True
+
+			# Extract information from URL and process it
+			videos = ie.extract(url)
+			for video in videos or []:
+				video['extractor'] = ie.IE_NAME
+				if playlist_number is not None:
+					video['playlist_number'] = unicode('%05d' % playlist_number)
+				try:
+					self.increment_downloads()
+					self.process_info(video)
+				except UnavailableVideoError:
+					self.trouble(u'\nERROR: unable to download video')
+
+			# Suitable InfoExtractor had been found; go to next URL
+			break
+
+		if not suitable_found:
+			self.trouble(u'ERROR: no suitable InfoExtractor: %s' % url)
 
 	def post_process(self, filename, ie_info):
 		"""Run the postprocessing chain on the given file."""
